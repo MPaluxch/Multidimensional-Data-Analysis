@@ -77,7 +77,7 @@ Volkswagen.rename(columns=dict2, inplace=True)
 Audi['Mark'] = "Audi"; BMW['Mark'] = "BMW"
 Ford['Mark'] = "Ford"; Hyundai['Mark'] = "Hyundai"
 Mercedes['Mark'] = "Mercedes"; Skoda['Mark'] = "Skoda"
-Toyota['Mark'] = "Toyota"; Volkswagen['Mark'] = "Volksswagen"
+Toyota['Mark'] = "Toyota"; Volkswagen['Mark'] = "Volkswagen"
 
 
 ## Funkcja do wybrania kolumn  
@@ -179,11 +179,12 @@ pd.DataFrame.to_csv(EXT_ALL, 'Hurtownia.csv', sep=',', na_rep='.', index=False)
 
 import psycopg2
 
+p_pass = input()
 conn = psycopg2.connect(
     dbname="Projekt_WAD_Hurtownia",
     user="postgres",
     host="localhost",
-    password="analizadanych"
+    password=p_pass
 )
 
 cur = conn.cursor()
