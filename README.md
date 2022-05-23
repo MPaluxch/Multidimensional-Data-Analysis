@@ -13,6 +13,7 @@ ETL process in Python:
 3. LOAD data to PostgreSQL database
   - psycopg2 package required
 
-Data from Kaggle website:
+Data from Kaggle website: 
+
 https://www.kaggle.com/datasets/adityadesai13/used-car-dataset-ford-and-mercedes
 https://www.kaggle.com/datasets/aleksandrglotov/car-prices-poland
