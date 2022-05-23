@@ -15,5 +15,6 @@ ETL process in Python:
 
 Data from Kaggle website: 
 
-https://www.kaggle.com/datasets/adityadesai13/used-car-dataset-ford-and-mercedes
+https://www.kaggle.com/datasets/adityadesai13/used-car-dataset-ford-and-mercedes 
+
 https://www.kaggle.com/datasets/aleksandrglotov/car-prices-poland
