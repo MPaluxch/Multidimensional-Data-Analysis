@@ -8,32 +8,32 @@ import csv
 
 server_name = input()
 
-# Proces ETL  
+# ETL Process  
 ## Extract -- 1 --
 
-# Baza danych MS SQL - dane z Polski
+# Microsoft SQL Server database - data from Poland
 conn = pyodbc.connect("Driver={SQL Server};"
                       "Server="+server_name+";"
                       "Database=Projekt_WAD;"
                       "Trusted_Connection=yes;")
 
-## Pobranie tabeli 'Taxes' (Taxes = mytable)
+## Get table 'Taxes' (Taxes = mytable)
 df = pd.read_sql_query('select * from mytable', conn)
 df
 
-## Pobranie tabeli 'Cars'
+## Get table 'Cars'
 Cars = pd.read_sql_query('select * from Cars_Poland', conn)
 Cars
 
 conn.close()
 
-### ustawienie sciezki 
+### Setting the path 
 os.chdir()
 
-# Baza danych aut z USA
+# Database of cars from USA
 USA_Cars_Data = pd.read_csv('usa_cars_all.csv')
 
-# Auta z Wielkiej Brytanii
+# Database of cars from United Kingdom
 Audi = pd.read_csv('audi_all1.csv')
 BMW = pd.read_csv('bmw_all1.csv')
 Ford = pd.read_csv('ford_all1.csv')
@@ -44,19 +44,19 @@ Toyota = pd.read_csv('toyota_all1.csv')
 Volkswagen = pd.read_csv('vw_all1.csv')
 
 ## Transform -- 2 -- 
-## Zamiana nazw kolumn na poprawne
+## Rename columns to the correct forms
 
-# dla dataframe "Cars" 
+# For "Cars" dataframe 
 dict1 = {'mark': 'Mark', 'model': 'Model', 'mileage': 'Mileage',
         'vol_engine':'Engine', 'fuel':'Fuel', 'price':'Price', 
         'time_sold':'Sold Time', 'dealer':'Vendor', 'year': 'Year'}
 
-## dla wszystkich dataframe z "UK"
+## For all dataframes with "UK"
 dict2 = {'model': 'Model', 'mileage': 'Mileage', 'year':'Year',
         'engineSize':'Engine', 'fuelType':'Fuel', 'price':'Price', 
         'time_sold':'Sold Time', 'dealer':'Vendor'}
 
-## Dla dataframe "USA"
+## For "USA" dataframe
 dict3 = {'make_name': 'Mark', 'model_name': 'Model', 'mileage': 'Mileage',
         'engine_displacement':'Engine', 'fuel_type':'Fuel', 'price':'Price', 
         'time_sold':'Sold Time', 'dealer':'Vendor', 'year':'Year'}
@@ -73,14 +73,14 @@ Skoda.rename(columns=dict2, inplace=True)
 Toyota.rename(columns=dict2, inplace=True)
 Volkswagen.rename(columns=dict2, inplace=True)
 
-## dodanie marki do oddzielnych tabel z autami
+## Adding brands
 Audi['Mark'] = "Audi"; BMW['Mark'] = "BMW"
 Ford['Mark'] = "Ford"; Hyundai['Mark'] = "Hyundai"
 Mercedes['Mark'] = "Mercedes"; Skoda['Mark'] = "Skoda"
 Toyota['Mark'] = "Toyota"; Volkswagen['Mark'] = "Volkswagen"
 
 
-## Funkcja do wybrania kolumn  
+## Function to select columns 
 def extract(data):
     extracted_data = data[['Mark','Model','Year','Mileage','Engine','Fuel',
                       'Price','Sold Time','Vendor']]
@@ -90,7 +90,7 @@ def extract(data):
     
     return extracted_data
 
-## Wyodrebnione dane
+## Extracted data
 EXT_Cars_PL = extract(Cars)
 EXT_Cars_USA = extract(USA_Cars_Data)
 EXT_Cars_Audi = extract(Audi)
@@ -102,7 +102,7 @@ EXT_Cars_Skoda = extract(Skoda)
 EXT_Cars_Toyota = extract(Toyota)
 EXT_Cars_VW = extract(Volkswagen)
 
-## Zmiana indeksowania 
+## Change indexing 
 EXT_Cars_PL = EXT_Cars_PL.reset_index(drop=True)
 EXT_Cars_USA = EXT_Cars_USA.reset_index(drop=True)
 EXT_Cars_Audi = EXT_Cars_Audi.reset_index(drop=True)
@@ -115,7 +115,7 @@ EXT_Cars_Toyota = EXT_Cars_Toyota.reset_index(drop=True)
 EXT_Cars_VW = EXT_Cars_VW.reset_index(drop=True)
 #EXT_Cars_PL['Sold Time'][5]
 
-## Dodanie kraju jako kolumne
+## Add country as a column
 EXT_Cars_PL['Country'] = 'Poland'
 EXT_Cars_USA['Country'] = 'USA'
 EXT_Cars_Audi['Country'] = 'United Kingdom'
@@ -127,13 +127,13 @@ EXT_Cars_Skoda['Country'] = 'United Kingdom'
 EXT_Cars_Toyota['Country'] = 'United Kingdom'
 EXT_Cars_VW['Country'] = 'United Kingdom'
 
-## Usuniecie niepotrzebnych zmiennych - zwolnienie pamieci
+## Remove unnecessary variables to free up memory
 del [Audi,BMW,Cars,Ford,Hyundai,Mercedes,Skoda,Toyota,USA_Cars_Data,Volkswagen]
 del [dict1, dict2, dict3] 
 del [server_name]; del[conn]
 
 
-## Funkcja do przeksztalcenia danych tekstowych
+## Function to convert text data
 def transform_data(data):
     data[['Mark', 'Model']] = data[['Mark', 'Model']].astype(str).apply(lambda col: col.str.capitalize())
     
@@ -155,7 +155,7 @@ EXT_Cars_Toyota = transform_data(EXT_Cars_Toyota)
 EXT_Cars_VW = transform_data(EXT_Cars_VW)
 
 
-## Funkcja do przeksztalcenia danych liczbowych
+## Function to convert numeric data
 def engine_transform(x): 
     if isinstance(x, float):    
         return x
@@ -166,19 +166,20 @@ def engine_transform(x):
 EXT_Cars_USA['Engine'] = engine_transform(EXT_Cars_USA['Engine'])
 EXT_Cars_PL['Engine'] = engine_transform(EXT_Cars_PL['Engine'])
 
-## Polaczenie w jedna tabele do analizy (data warehouse)
+## Combine into one table for analysis (data warehouse)
 EXT_ALL = pd.concat([EXT_Cars_PL, EXT_Cars_USA, EXT_Cars_Audi, EXT_Cars_BMW, EXT_Cars_Ford, EXT_Cars_Hyundai, EXT_Cars_Merc, EXT_Cars_Skoda, EXT_Cars_Toyota, EXT_Cars_VW])
 
-## 'Transform' ukonczony 
+## "Transform" complete
 
-## Zapis do csv 
+## Save to csv - (also as a copy on hard drive)
 pd.DataFrame.to_csv(EXT_ALL, 'Hurtownia.csv', sep=',', na_rep='.', index=False)
 
 ## Load -- 3 --
-## Zasilenie tabeli utworzonym plikiem csv - stworzona hurtownia z danymi 
+## Load data to PostgreSQL table with created csv file - (created data warehouse) 
 
 import psycopg2
 
+## Informations needed to connect to the database
 p_pass = input()
 conn = psycopg2.connect(
     dbname="Projekt_WAD_Hurtownia",
@@ -187,8 +188,9 @@ conn = psycopg2.connect(
     password=p_pass
 )
 
-cur = conn.cursor()
+cur = conn.cursor() #  Opening the connection to the database
 
+## Creating new table
 cur.execute("""CREATE TABLE Hurtownia_Samochody(
     Mark text,
     Model text,
@@ -203,6 +205,7 @@ cur.execute("""CREATE TABLE Hurtownia_Samochody(
 )
 """)
 
+## Insert data with BULK method 
 with open('merged3.csv', 'r') as f:
     reader = csv.reader(f)
     next(reader) # Skip the header row.
@@ -215,6 +218,5 @@ conn.commit()
 
 cur.close()
 
-conn.close()
+conn.close() # Closing the connection to the database
 
-## !! Proces ETL zostal ukonczony pomyslnie !!
