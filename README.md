@@ -1,6 +1,6 @@
 # Multidimensional Data Analysis
 
--- Step 1) ETL process in Python: --
+## -- Step 1) ETL process in Python: --
 
 1. EXTRACT data from Microsoft SQL Server and csv files
   - pyodbc package required
@@ -19,9 +19,9 @@ https://www.kaggle.com/datasets/adityadesai13/used-car-dataset-ford-and-mercedes
 
 https://www.kaggle.com/datasets/aleksandrglotov/car-prices-poland 
 
--- Step 2) Aggregations were made with Python and SQL -- 
+## -- Step 2) Aggregations were made with Python and SQL -- 
 
--- Step 3) Basic Machine Learning (Regression Algorithms) -- 
+## -- Step 3) Basic Machine Learning (Regression Algorithms) -- 
   - Linear Regression
   - Random Forest
   - Decision Tree
