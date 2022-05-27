@@ -21,6 +21,11 @@ https://www.kaggle.com/datasets/aleksandrglotov/car-prices-poland
 
 ## -- Step 2) Aggregations were made with Python and SQL -- 
 
+Data aggregations:
+ - TOP 5 most frequently purchased car brands in a specific country
+ - TOP 3 most popular models in these brands 
+ - Counter and ranking for these models
+
 ## -- Step 3) Basic Machine Learning (Regression Algorithms) -- 
   - Linear Regression
   - Random Forest
