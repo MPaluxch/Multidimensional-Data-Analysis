@@ -72,7 +72,7 @@ from sklearn.preprocessing import StandardScaler
 ss = StandardScaler()
 x_ss = ss.fit_transform(x)
 
-# Tran/Test Split (80/20) 
+# Train/Test Split (80/20) 
 from sklearn.model_selection import train_test_split
 xtrain, xtest, ytrain, ytest = train_test_split(x_ss, y, test_size=0.2)
 
