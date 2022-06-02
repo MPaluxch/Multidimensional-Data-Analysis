@@ -1,4 +1,4 @@
-# Multidimensional Data Analysis
+# Multidimensional Data Analysis Project
 
 ## -- Step 1) ETL process in Python: --
 
