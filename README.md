@@ -31,3 +31,10 @@ Data aggregations:
   - Random Forest
   - Decision Tree
   - K Neighbors
+
+## - Step 4) Create some visualizations using Tableau software --
+
+  Sample Dashboard:
+
+![poland](https://user-images.githubusercontent.com/68030120/171697975-cc19835a-5ca8-4f1c-bebb-fb9147d6f7dd.png)
+
