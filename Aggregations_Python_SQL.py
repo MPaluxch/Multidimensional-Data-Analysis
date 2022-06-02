@@ -91,43 +91,7 @@ Cars = Cars.drop(Cars[Cars.Year > 2023].index)
 
 ## - Scenario 1 - ##
 
-### 1) Sprzedaz danej marki w danym roku (TOP10)
-
-## Group by Mark & Country & Sold_Time
-df1 = Cars.groupby(['Mark',"Country","Sold_Year"], as_index=False)['Price'].mean()
-df1_c = pd.DataFrame(Cars.groupby(['Mark',"Country","Sold_Year"]).size().reset_index(name='counts'))
-
-df1[['Counts']] = df1_c[['counts']]
-
-## Supporting Dataframe 
-## Group by Mark & Country
-df2 = Cars.groupby(['Mark',"Country", "Sold_Month"],as_index=False)['Price'].mean()
-df2_c = pd.DataFrame(Cars.groupby(['Mark',"Country","Sold_Month"]).size().reset_index(name='counts'))
-
-df2[['Counts']] = df2_c[['counts']]
-
-
-## Unormowanie walut - wszystko z perspektywy Polski (PLN)
-# Przyjeto orientacyjnie kursy walut: GBP/PLN = 5, USD/PLN = 3.90
-
-df1.loc[df1["Country"] == "Poland", "Price_PLN"] = df1.Price.apply(lambda x: x)
-df1.loc[df1["Country"] == "USA", "Price_PLN"] = df1.Price.apply(lambda x: x*3.90)
-df1.loc[df1["Country"] == "United Kingdom", "Price_PLN"] = df1.Price.apply(lambda x: x*5)
-
-df2.loc[df2["Country"] == "Poland", "Price_PLN"] = df2.Price.apply(lambda x: x)
-df2.loc[df2["Country"] == "USA", "Price_PLN"] = df2.Price.apply(lambda x: x*3.90)
-df2.loc[df2["Country"] == "United Kingdom", "Price_PLN"] = df2.Price.apply(lambda x: x*5)
-
-del[df1_c,df2_c]
-
-
-### 2) Sredni przebieg sprzedanego auta z danego rocznika ###
-
-## Group by Production Year & Mark
-df3 = Cars.groupby(['Year',"Mark"], as_index=False)['Mileage','Price'].mean()
-
-
-### 3) TOP5 sprzedanych marek aut w kazdym kraju i TOP3 modeli kazdego z nich
+### 1) TOP5 sprzedanych marek aut w kazdym kraju i TOP3 modeli kazdego z nich
 
 TOP_PL.columns = ["Mark","Model","Count","Rank"]
 TOP_USA.columns = ["Mark","Model","Count","Rank"]
