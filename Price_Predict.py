@@ -216,5 +216,7 @@ last_compare_data
 # In both Random Forest and Decision Tree models may have overfitting -
 # more than 0.9 score in training data 
 
+## Create new models:
+
 
 
