@@ -326,7 +326,9 @@ PL_Avg["Price_22"] = PL_Avg22.round(2)
 
 PL_Avg
 
-Cars[Cars.Country == 'Poland'].pivot_table(values = "Price", index = "Sold_Month", aggfunc = 'mean')
+## Monthly Sales each brand in Poland
+Monthly_Sales = Cars[Cars.Country == "Poland"].pivot_table(values = ['Model'], index = 'Sold_Month', columns="Mark", aggfunc="count")
 
-Cars[Cars.Country == "Poland"].pivot_table(values = ["Price"], index = 'Sold_Month', aggfunc="mean")
+Monthly_Sales.round(0)
+
 
