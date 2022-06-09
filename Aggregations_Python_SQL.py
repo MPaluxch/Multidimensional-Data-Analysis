@@ -186,7 +186,7 @@ conn.close()
 
 ## - Scenario 2 - ##
 
-### 1) TOP5 car brands sold in each country and TOP3 models of each brand 
+### 2) TOP5 car brands sold in each country and TOP3 models of each brand 
 ## now have sold year separately
 
 ## New Ranking with sold_year aggregations
@@ -294,4 +294,39 @@ TOP_PL_2022.to_sql('Poland_2022', engine)
 
 conn.commit()
 conn.close()
+
+## - Scenario 3 - ##
+## Pivot table months/years (as rows) and sold cars by brand (as columns) 
+
+
+Cars.columns
+
+## Create aggregation by average price 
+PL_Avg19 = Cars[(Cars.Country == "Poland") & (Cars.Sold_Year == "2019")].pivot_table(values = ["Price"], index = 'Mark', aggfunc="mean")
+
+PL_Avg19.columns = ["Price_19"]
+
+PL_Avg20 = Cars[(Cars.Country == "Poland") & (Cars.Sold_Year == "2020")].pivot_table(values = ["Price"], index = 'Mark', aggfunc="mean")
+
+PL_Avg20.columns = ["Price_20"]
+
+PL_Avg21 = Cars[(Cars.Country == "Poland") & (Cars.Sold_Year == "2021")].pivot_table(values = ["Price"], index = 'Mark', aggfunc="mean")
+
+PL_Avg21.columns = ["Price_21"]
+
+PL_Avg22 = Cars[(Cars.Country == "Poland") & (Cars.Sold_Year == "2022")].pivot_table(values = ["Price"], index = 'Mark', aggfunc="mean")
+
+PL_Avg22.columns = ["Price_22"]
+
+## merge dataframes
+PL_Avg = pd.DataFrame(PL_Avg19).copy().round(2)
+PL_Avg["Price_20"] = PL_Avg20.round(2)
+PL_Avg["Price_21"] = PL_Avg21.round(2)
+PL_Avg["Price_22"] = PL_Avg22.round(2)
+
+PL_Avg
+
+Cars[Cars.Country == 'Poland'].pivot_table(values = "Price", index = "Sold_Month", aggfunc = 'mean')
+
+Cars[Cars.Country == "Poland"].pivot_table(values = ["Price"], index = 'Sold_Month', aggfunc="mean")
 
