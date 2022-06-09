@@ -91,7 +91,8 @@ Cars = Cars.drop(Cars[Cars.Year > 2023].index)
 
 ## - Scenario 1 - ##
 
-### 1) TOP5 sprzedanych marek aut w kazdym kraju i TOP3 modeli kazdego z nich
+### 1) TOP5 car brands sold in each country and TOP3 models of each 
+## but all are from the period 2019-2022 (!!)
 
 TOP_PL.columns = ["Mark","Model","Count","Rank"]
 TOP_USA.columns = ["Mark","Model","Count","Rank"]
@@ -182,3 +183,114 @@ conn.commit()
 cur.close()
 
 conn.close()
+
+## - Scenario 2 - ##
+
+### 1) TOP5 car brands sold in each country and TOP3 models of each brand 
+## now have sold year separately
+
+## New Ranking with sold_year aggregations
+
+## 2022 ranking in Poland
+query_pl_2022 = ("""
+SELECT * FROM (
+    SELECT Mark, Model, count(Model),
+    ROW_NUMBER() OVER (PARTITION BY Mark Order by count(Model) DESC) AS Rank1
+    FROM public.hurtownia_samochody
+    Where Country = 'Poland' AND (left(sold_time, 4) = '2022') 
+	AND Mark IN
+        (SELECT Mark FROM public.hurtownia_samochody 
+        Where Country = 'Poland'
+        group by Mark Order by count(Model) DESC LIMIT 5) 
+        Group by Mark, Model, left(sold_time, 4)) RNK
+        WHERE Rank1 <=3 """)
+
+cur.execute(query_pl_2022)
+TOP_PL_2022 = cur.fetchall()
+TOP_PL_2022 = pd.DataFrame(TOP_PL_2022)
+
+## 2021 ranking in Poland
+query_pl_2021 = ("""
+SELECT * FROM (
+    SELECT Mark, Model, count(Model),
+    ROW_NUMBER() OVER (PARTITION BY Mark Order by count(Model) DESC) AS Rank1
+    FROM public.hurtownia_samochody
+    Where Country = 'Poland' AND (left(sold_time, 4) = '2021') 
+	AND Mark IN
+        (SELECT Mark FROM public.hurtownia_samochody 
+        Where Country = 'Poland'
+        group by Mark Order by count(Model) DESC LIMIT 5) 
+        Group by Mark, Model, left(sold_time, 4)) RNK
+        WHERE Rank1 <=3 """)
+
+cur.execute(query_pl_2021)
+TOP_PL_2021 = cur.fetchall()
+TOP_PL_2021 = pd.DataFrame(TOP_PL_2021)
+
+
+## 2020 ranking in Poland
+query_pl_2020 = ("""
+SELECT * FROM (
+    SELECT Mark, Model, count(Model),
+    ROW_NUMBER() OVER (PARTITION BY Mark Order by count(Model) DESC) AS Rank1
+    FROM public.hurtownia_samochody
+    Where Country = 'Poland' AND (left(sold_time, 4) = '2020') 
+	AND Mark IN
+        (SELECT Mark FROM public.hurtownia_samochody 
+        Where Country = 'Poland'
+        group by Mark Order by count(Model) DESC LIMIT 5) 
+        Group by Mark, Model, left(sold_time, 4)) RNK
+        WHERE Rank1 <=3 """)
+
+cur.execute(query_pl_2020)
+TOP_PL_2020 = cur.fetchall()
+TOP_PL_2020 = pd.DataFrame(TOP_PL_2020)
+
+
+## 2019 ranking in Poland
+query_pl_2019 = ("""
+SELECT * FROM (
+    SELECT Mark, Model, count(Model),
+    ROW_NUMBER() OVER (PARTITION BY Mark Order by count(Model) DESC) AS Rank1
+    FROM public.hurtownia_samochody
+    Where Country = 'Poland' AND (left(sold_time, 4) = '2019') 
+	AND Mark IN
+        (SELECT Mark FROM public.hurtownia_samochody 
+        Where Country = 'Poland'
+        group by Mark Order by count(Model) DESC LIMIT 5) 
+        Group by Mark, Model, left(sold_time, 4)) RNK
+        WHERE Rank1 <=3 """)
+
+cur.execute(query_pl_2019)
+TOP_PL_2019 = cur.fetchall()
+TOP_PL_2019 = pd.DataFrame(TOP_PL_2019)
+
+## Creating datatables in PostgreSQL
+
+## 2022 Ranking
+cur.execute("""CREATE TABLE PL_2022(
+    Mark text,
+    Model text,
+    Count int,
+    Rank int
+)
+""")
+
+TOP_PL_2022.columns = ["Mark","Model","Count","Rank"]
+TOP_PL_2021.columns = ["Mark","Model","Count","Rank"]
+TOP_PL_2020.columns = ["Mark","Model","Count","Rank"]
+TOP_PL_2019.columns = ["Mark","Model","Count","Rank"]
+
+
+from sqlalchemy import create_engine
+engine = create_engine('postgresql://postgres:'+p_pass+'@localhost:5432/Projekt_WAD_Hurtownia')
+
+TOP_PL_2019.to_sql('Poland_2019', engine)
+TOP_PL_2020.to_sql('Poland_2020', engine)
+TOP_PL_2021.to_sql('Poland_2021', engine)
+TOP_PL_2022.to_sql('Poland_2022', engine)
+
+
+conn.commit()
+conn.close()
+
