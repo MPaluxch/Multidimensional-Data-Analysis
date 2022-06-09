@@ -285,6 +285,7 @@ TOP_PL_2019.columns = ["Mark","Model","Count","Rank"]
 from sqlalchemy import create_engine
 engine = create_engine('postgresql://postgres:'+p_pass+'@localhost:5432/Projekt_WAD_Hurtownia')
 
+## Load dataframes to PostgreSQL
 TOP_PL_2019.to_sql('Poland_2019', engine)
 TOP_PL_2020.to_sql('Poland_2020', engine)
 TOP_PL_2021.to_sql('Poland_2021', engine)
