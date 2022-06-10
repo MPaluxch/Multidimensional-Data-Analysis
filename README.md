@@ -13,7 +13,7 @@
 3. LOAD data to PostgreSQL database
   - psycopg2 package required
 
-Data from Kaggle website (Data has been slightly altered for the project!)
+Data from Kaggle website (Data has been slightly altered for the project!!)
 
 https://www.kaggle.com/datasets/adityadesai13/used-car-dataset-ford-and-mercedes 
 
@@ -25,6 +25,13 @@ Data aggregations:
  - TOP 5 most frequently purchased car brands in a specific country
  - TOP 3 most popular models in these brands 
  - Counter and ranking for these models
+
+Pivot tables:
+  - Average price by brand depend of year (2019-2022)
+  - Count sold cars by year & month depend by brand
+
+ROLLUP SQL clause:
+  - Number of cars sold and their average price in a given month and year
 
 ## -- Step 3) Basic Machine Learning (Regression Algorithms) -- 
   - Linear Regression
