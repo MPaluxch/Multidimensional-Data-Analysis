@@ -265,9 +265,3 @@ last_compare_data
 # The best model on this dataset is K Neighbors
 # In both Random Forest and Decision Tree models may have overfitting -
 # more than 0.9 score in training data 
-
-
-## Create new models:
-## Need to add MSE, RMSE to comparing dataframe
-
-
