@@ -205,6 +205,7 @@ SELECT * FROM (
         Group by Mark, Model, left(sold_time, 4)) RNK
         WHERE Rank1 <=3 """)
 
+##
 cur.execute(query_pl_2022)
 TOP_PL_2022 = cur.fetchall()
 TOP_PL_2022 = pd.DataFrame(TOP_PL_2022)
