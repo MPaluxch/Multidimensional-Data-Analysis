@@ -298,7 +298,6 @@ conn.close()
 ## - Scenario 3 - ##
 ## Pivot table months/years (as rows) and sold cars by brand (as columns) 
 
-
 Cars.columns
 
 ## Create aggregation by average price 
@@ -331,4 +330,21 @@ Monthly_Sales = Cars[Cars.Country == "Poland"].pivot_table(values = ['Model'], i
 
 Monthly_Sales.round(0)
 
+## ROLLUP in SQL 
 
+rollup_query = ("""
+select mark, left(sold_time, 7), count(model), round(avg(price))
+from public.hurtownia_samochody
+where country = 'Poland' AND Mark in (
+	select mark 
+	from public.top_poland)
+group by rollup(mark, left(sold_time,4), left(sold_time,7))
+""")
+
+cur.execute(rollup_query)
+Rollup_SQL = cur.fetchall()
+Rollup_SQL = pd.DataFrame(Rollup_SQL)
+
+Rollup_SQL.columns = ["Mark","Sold_Date","Count","Avg_Price"]
+
+Rollup_SQL
