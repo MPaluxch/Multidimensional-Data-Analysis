@@ -291,7 +291,6 @@ TOP_PL_2020.to_sql('Poland_2020', engine)
 TOP_PL_2021.to_sql('Poland_2021', engine)
 TOP_PL_2022.to_sql('Poland_2022', engine)
 
-
 conn.commit()
 conn.close()
 
@@ -330,8 +329,16 @@ Monthly_Sales = Cars[Cars.Country == "Poland"].pivot_table(values = ['Model'], i
 
 Monthly_Sales.round(0)
 
-## ROLLUP in SQL 
+monthly_data = pd.DataFrame(Monthly_Sales).copy()
+monthly_data.reset_index(inplace=True)
 
+monthly_data
+
+## Load dataframes to PostgreSQL
+PL_Avg.to_sql('Poland_Avg_Price_by_Year', engine)
+monthly_data.to_sql('Monthly_Data', engine)
+
+## ROLLUP in SQL 
 rollup_query = ("""
 select mark, left(sold_time, 7), count(model), round(avg(price))
 from public.hurtownia_samochody
